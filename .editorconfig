@@ -20,4 +20,5 @@ trim_trailing_whitespace = false
 [*.coffee]
 indent_size = 2
 
-
+[*.go]
+indent_style = tab
