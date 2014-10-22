@@ -1,23 +1,19 @@
-{{set . "title" "Home"}}
-{{template "header.html" .}}
+<!DOCTYPE html>
 
-<header class="hero-unit" style="background-color:#A9F16C">
-  <div class="container">
-    <div class="row">
-      <div class="hero-text">
-        <h1>It works!</h1>
-        <p></p>
-      </div>
-    </div>
-  </div>
-</header>
+<html>
+<head>
+    <title>Revmgo TestApp</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
 
-<div class="container">
-  <div class="row">
-    <div class="span6">
-      {{template "flash.html" .}}
-    </div>
-  </div>
-</div>
+<p>This project doesn't really do much other than provide some tests.
+    visit those at <a href="/@tests">@tests</a> alternatively run the tests
+    via the command line.
+      <pre>
+        revel test github.com/Tsuguya/revelmgo/sample
+      </pre>
+</p>
 
-{{template "footer.html" .}}
+</body>
+</html>
