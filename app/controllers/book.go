@@ -12,15 +12,11 @@ type Book struct {
 }
 
 func (c Book) Index() revel.Result {
-	return c.Render()
+    b := models.FindAll(c.Database)
+	return c.Render(b)
 }
 
 func (c Book) View(id string) revel.Result {
-	b := models.FindById(c.Database, id)
-
-	if b.Id.Hex() != id {
-		return c.NotFound("Could not find a book with '%s' as id.", id)
-	}
-
+    b := models.FindByTitle(c.Database, id)
 	return c.Render(b)
 }
