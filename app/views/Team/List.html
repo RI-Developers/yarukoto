@@ -1,9 +1,14 @@
+
 {
     "result": true,
     "teams": [
+
+{{range .b}}
         {
-            "_id": "tm001",
-            "name": "チーム名"
+            "_id": "{{.TeamId}},
+            "name": "{{.Name}}
         }
+{{end}}
+
     ]
 }
