@@ -15,5 +15,8 @@ GET     /public/*filepath                       Static.Serve("public")
 GET     /book/                                  Book.Index
 GET     /book/view/:id                          Book.View
 
+# Yarukoto
+GET    /login                                  User.Login
+
 # Catch all
 *       /:controller/:action                    :controller.:action
