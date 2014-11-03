@@ -12,10 +12,6 @@ type Team struct {
 }
 
 func (c Team) List() revel.Result {
-    // set content type to json
-    //c.Response.Status = http.StatusTeapot
-    //c.Response.ContentType = "application/json"
-
     b := models.FindTeamList(c.Database)
 	return c.RenderJson(b)
 }
