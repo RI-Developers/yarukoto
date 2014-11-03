@@ -8,29 +8,86 @@ import (
 
 const COLLECTION = "teams"
 
+
 type Team struct {
-	Id    bson.ObjectId `bson:"_id,omitempty"`
-    TeamId    string
-	Name  string        `bson:"name"`
-	//Users []string      `bson:"users"`
-	//Projects bson.D     `bson:"projects"`
+    Id       bson.ObjectId `bson:"_id,omitempty"`
+    Name     string        `bson:"name"`
+    Users    []string      `bson:"users"`
+    Projects []Project     `bson:"projects"`
 }
+
+
+type Project struct {
+    Id      bson.ObjectId `bson:"_id,omitempty"`
+    Name    string        `bson:"name"`
+    Users   []string      `bson:"users"`
+    Todos   []Todo        `bson:"todos"`
+}
+
+type Todo struct {
+    Id        bson.ObjectId `bson:"_id,omitempty"`
+    AuthorId  string        `bson:"author_id"`
+    Title     string        `bson:"title"`
+    CDate     string        `bson:"c_date"`
+    SSDate    string        `bson:"s_s_date"`
+    SFDate    string        `bson:"s_f_date"`
+    FDate     string        `bson:"f_date"`
+    Finished  string        `bson:"finished"`
+}
+
+
+type TeamList struct {
+    Id    bson.ObjectId  `bson:"_id,omitempty"`
+	Name  string         `bson:"name"`
+}
+
+type ProjectList struct {
+    Id        bson.ObjectId      `bson:"_id,omitempty"`
+    Name      string             `bson:"name"`
+	Users     []string           `bson:"users"`
+	Projects  []ProjectListItem  `bson:"projects"`
+}
+
+type ProjectListItem struct {
+    Id    string  `bson:"id"`
+    Name  string  `bson:"name"`
+}
+
+
+
+
+
 
 func Collection(d *mgo.Database) *mgo.Collection {
 	return d.C(COLLECTION)
 }
 
-func FindTeamList(d *mgo.Database) []Team {
-    result := []Team{}
+// get team list (API_G001)
+func FindTeamList(d *mgo.Database) []TeamList {
+    result := []TeamList{}
     Collection(d).Find(nil).All(&result)
 
-    for i, each := range result {
-        each.TeamId = each.Id.Hex()
-        result[i] = each
+    //for i, each := range result {
+    //    each.TeamId = each.Id.Hex()
+    //    result[i] = each
+    //}
+
+    return result
+}
+
+
+// get project list (API_P001)
+func FindProjectListById(d *mgo.Database, HexId string) []ProjectList {
+    result := []ProjectList{}
+    if bson.IsObjectIdHex(HexId) {
+        Id := bson.ObjectIdHex(HexId)
+        Collection(d).FindId(Id).All(&result)
     }
 
     return result
 }
+
+
 
 //func FindByObjectId(d *mgo.Database, Id bson.ObjectId) *Book {
 //	b := new(Book)
