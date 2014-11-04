@@ -4,6 +4,7 @@ import (
 	"github.com/Tsuguya/revmgo/app"
 	"yarukoto/app/models/team"
 	"github.com/revel/revel"
+    //"net/http"
 )
 
 type Team struct {
@@ -12,7 +13,10 @@ type Team struct {
 }
 
 func (c Team) List() revel.Result {
+    //c.Response.Status = http.StatusTeapot
+    c.Response.ContentType = "application/json"
+
     b := models.FindTeamList(c.Database)
-	return c.RenderJson(b)
+	return c.Render(b)
 }
 

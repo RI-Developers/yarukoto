@@ -36,6 +36,7 @@ type Todo struct {
 }
 
 
+
 type TeamList struct {
     Id    bson.ObjectId  `bson:"_id,omitempty"`
 	Name  string         `bson:"name"`
@@ -55,6 +56,12 @@ type ProjectListItem struct {
 
 
 
+type TeamListResponse struct {
+    Id    string
+    Name  string
+}
+
+
 
 
 func Collection(d *mgo.Database) *mgo.Collection {
@@ -62,13 +69,19 @@ func Collection(d *mgo.Database) *mgo.Collection {
 }
 
 // get team list (API_G001)
-func FindTeamList(d *mgo.Database) []TeamList {
-    result := []TeamList{}
-    Collection(d).Find(nil).All(&result)
-    //for i, each := range result {
-    //    each.TeamId = each.Id.Hex()
-    //    result[i] = each
-    //}
+func FindTeamList(d *mgo.Database) []TeamListResponse {
+    teamList := []TeamList{}
+    result   := []TeamListResponse{}
+    Collection(d).Find(nil).All(&teamList)
+
+    // TeamList to TeamListResponse
+    for _, each := range teamList {
+        newTeamList := TeamListResponse{}
+        newTeamList.Id = each.Id.Hex()
+        newTeamList.Name = each.Name
+        result = append(result, newTeamList)
+    }
+
     return result
 }
 
