@@ -12,6 +12,7 @@ type User struct {
 }
 
 func (c User) Login() revel.Result {
+    c.Response.ContentType = "application/json"
 	return c.Render()
 }
 
