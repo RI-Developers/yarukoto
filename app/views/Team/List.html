@@ -1,13 +1,16 @@
 {
     "result": true,
     "teams": [
-
-{{range .b}}
+{{$max := .Max}}
+{{range $i, $e := .b}}
         {
-            "_id": "{{.Id}},
-            "name": "{{.Name}}
+            "id": "{{$e.Id}},
+            "name": "{{$e.Name}}
+        {{if eq $max $i}}
         }
+        {{else}}
+        },
+        {{end}}
 {{end}}
-
     ]
 }
