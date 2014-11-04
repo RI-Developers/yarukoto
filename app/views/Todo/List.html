@@ -1,6 +1,8 @@
 {
     "result": true,
     "todos": [
+    {{$max := .Max}}
+    {{range $i, $e := .b}}
         {
             "_id": "todo001",
             "author_name": "ユーザー名",
@@ -10,6 +12,11 @@
             "s_f_date": "完了予定日時",
             "f_date": "完了日時",
             "finished": false
+        {{if eq $i $max}}
         }
+        {{else}}
+        },
+        {{end}}
+    {{end}}
     ]
 }
