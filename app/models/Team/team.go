@@ -61,6 +61,10 @@ type TeamListResponse struct {
     Name  string
 }
 
+type ProjectListResponse struct {
+    Id    string
+    Name  string
+}
 
 
 
@@ -87,12 +91,21 @@ func FindTeamList(d *mgo.Database) []TeamListResponse {
 
 
 // get project list (API_P001)
-func FindProjectListById(d *mgo.Database, HexId string) []ProjectList {
-    result := []ProjectList{}
+func FindProjectListById(d *mgo.Database, HexId string) []ProjectListResponse {
+    projectList := []ProjectList{}
+    result      := []ProjectListResponse{}
     if bson.IsObjectIdHex(HexId) {
         Id := bson.ObjectIdHex(HexId)
-        Collection(d).FindId(Id).All(&result)
+        Collection(d).FindId(Id).All(&projectList)
     }
+
+    for _, each := range projectList {
+        newPList := ProjectListResponse{}
+        newPList.Id = each.Id.Hex()
+        newPList.Name = each.Name
+        result = append(result, newPList)
+    }
+
     return result
 }
 
