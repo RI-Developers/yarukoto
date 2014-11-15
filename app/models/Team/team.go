@@ -121,8 +121,6 @@ func FindProjectListByTeamId(d *mgo.Database, HexTeamId string) []ProjectListRes
         Collection(d).FindId(Id).All(&projectList)
     }
 
-    fmt.Println(projectList)
-
     for _, each := range projectList {
         newPList := ProjectListResponse{}
         newPList.Id = each.Id.Hex()
