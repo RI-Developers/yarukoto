@@ -3,23 +3,23 @@ package models
 import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-    //"fmt"
+    "fmt"
 )
 
-const COLLECTION = "teams"
+const COLLECTION = "projects"
 
 
 type Team struct {
     Id       bson.ObjectId `bson:"_id,omitempty"`
     Name     string        `bson:"name"`
     Users    []string      `bson:"users"`
-    Projects []mgo.DBRef     `bson:"projects"`
+    Projects []string      `bson:"projects"`
 }
 
 type Project struct {
     Id      bson.ObjectId `bson:"_id,omitempty"`
     Name    string        `bson:"name"`
-    Users   []mgo.DBRef     `bson:"users"`
+    Users   mgo.DBRef     `bson:"users"`
     Todos   []string      `bson:"todos"`
 }
 
@@ -91,14 +91,10 @@ func Collection(d *mgo.Database) *mgo.Collection {
 }
 
 // get team list (API_G001)
-func FindTeamList(d *mgo.Database) []Team {
-    teamList := []Team{}
+func FindTeamList(d *mgo.Database) []TeamListResponse {
+    teamList := []TeamList{}
     result   := []TeamListResponse{}
     Collection(d).Find(nil).All(&teamList)
-
-    //pro := Project{}
-    //d.FindRef(&teamList[0].Projects[0]).One(&pro)
-    //fmt.Printf("%#v", pro)
 
     // TeamList to TeamListResponse
     for _, each := range teamList {
@@ -108,8 +104,7 @@ func FindTeamList(d *mgo.Database) []Team {
         result = append(result, newTeamList)
     }
 
-
-    return teamList
+    return result
 }
 
 // get project list (API_P001)
