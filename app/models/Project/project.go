@@ -1,25 +1,26 @@
 package models
 
 import (
+    "strconv"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
-const COLLECTION = "teams"
+const COLLECTION = "projects"
 
 
 type Team struct {
     Id       bson.ObjectId `bson:"_id,omitempty"`
     Name     string        `bson:"name"`
     Users    []string      `bson:"users"`
-    Projects []mgo.DBRef     `bson:"projects"`
+    Projects []string      `bson:"projects"`
 }
 
 type Project struct {
     Id      bson.ObjectId `bson:"_id,omitempty"`
     Name    string        `bson:"name"`
-    Users   []mgo.DBRef   `bson:"users"`
-    Todos   []string      `bson:"todos"`
+    Users   mgo.DBRef     `bson:"users"`
+    Todos   []mgo.DBRef      `bson:"todos"`
 }
 
 type Todo struct {
@@ -30,7 +31,7 @@ type Todo struct {
     SSDate    string        `bson:"s_s_date"`
     SFDate    string        `bson:"s_f_date"`
     FDate     string        `bson:"f_date"`
-    Finished  string        `bson:"finished"`
+    Finished  bool          `bson:"finished"`
 }
 
 
@@ -84,6 +85,8 @@ type TodoListResponse struct {
     Finished    string
 }
 
+
+
 func FindRef(d *mgo.Database, ref *mgo.DBRef) *mgo.Query {
 	var c *mgo.Collection
 
@@ -97,13 +100,14 @@ func FindRef(d *mgo.Database, ref *mgo.DBRef) *mgo.Query {
     return c.FindId(id)
 }
 
+
 func Collection(d *mgo.Database) *mgo.Collection {
 	return d.C(COLLECTION)
 }
 
 // get team list (API_G001)
-func FindTeamList(d *mgo.Database) []Team {
-    teamList := []Team{}
+func FindTeamList(d *mgo.Database) []TeamListResponse {
+    teamList := []TeamList{}
     result   := []TeamListResponse{}
     Collection(d).Find(nil).All(&teamList)
 
@@ -115,35 +119,54 @@ func FindTeamList(d *mgo.Database) []Team {
         result = append(result, newTeamList)
     }
 
-
-    return teamList
+    return result
 }
 
 // get project list (API_P001)
 func FindProjectListByTeamId(d *mgo.Database, HexTeamId string) []ProjectListResponse {
-    team := Team{}
-    projectList := []ProjectListResponse{}
-
-    //result      := []ProjectListResponse{}
+    projectList := []ProjectList{}
+    result      := []ProjectListResponse{}
     if bson.IsObjectIdHex(HexTeamId) {
         Id := bson.ObjectIdHex(HexTeamId)
-        Collection(d).FindId(Id).One(&team)
+        Collection(d).FindId(Id).All(&projectList)
     }
 
-    for _, projectRef := range team.Projects {
+    for _, each := range projectList {
+        newPList := ProjectListResponse{}
+        newPList.Id = each.Id.Hex()
+        newPList.Name = each.Name
+        result = append(result, newPList)
+    }
+    return result
+}
+
+
+// get todo list (API_T001)
+func FindTodoListByProjectId(d *mgo.Database, projectId string) []TodoListResponse {
+    todoList := []TodoListResponse{}
+
+    if bson.IsObjectIdHex(projectId) {
         project := Project{}
-        FindRef(d, &projectRef).One(&project)
+        id := bson.ObjectIdHex(projectId)
+        Collection(d).FindId(id).One(&project)
 
-        nProjectRef := ProjectListResponse{}
-        nProjectRef.Id = bson.ObjectId.Hex(project.Id)  // convert OID to Hex
-        nProjectRef.Name = project.Name
+        for _, todoRef := range project.Todos {
+            todo := Todo{}
+            FindRef(d, &todoRef).One(&todo)
 
-        projectList = append(projectList, nProjectRef)
+            nTodoRes := TodoListResponse{}
+            nTodoRes.Id = bson.ObjectId.Hex(todo.Id)
+            nTodoRes.AuthorName = todo.AuthorId
+            nTodoRes.CDate = todo.CDate
+            nTodoRes.SSDate = todo.SSDate
+            nTodoRes.SFDate = todo.SFDate
+            nTodoRes.FDate = todo.FDate
+            nTodoRes.Finished = strconv.FormatBool(todo.Finished)
+
+            todoList = append(todoList, nTodoRes)
+        }
     }
 
-    //pro := Project{}
-    //FindRef(d, &teamList[0].Projects[0]).One(&pro)
-
-    return projectList
+    return todoList
 }
 

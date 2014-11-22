@@ -18,5 +18,6 @@ func (c Team) List() revel.Result {
     b := models.FindTeamList(c.Database)
     Max := len(b) - 1
 	return c.Render(b, Max)
+	//return c.RenderJson(b)
 }
 
