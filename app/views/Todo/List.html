@@ -1,0 +1,22 @@
+{
+    "result": true,
+    "todos": [
+    {{$max := .Max}}
+    {{range $i, $e := .b}}
+        {
+            "_id": "{{$e.Id}}",
+            "author_name": "{{$e.AuthorName}}",
+            "title": "{{$e.Title}}",
+            "c_date": "{{$e.CDate}}",
+            "s_s_date": "{{$e.SSDate}}",
+            "s_f_date": "{{$e.SFDate}}",
+            "f_date": "{{$e.FDate}}",
+            "finished": {{if eq $e.Finished "true"}} true {{else}} false {{end}}
+        {{if eq $i $max}}
+        }
+        {{else}}
+        },
+        {{end}}
+    {{end}}
+    ]
+}

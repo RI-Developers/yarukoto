@@ -1,0 +1,16 @@
+{
+    "result": true,
+    "teams": [
+{{$max := .Max}}
+{{range $i, $e := .b}}
+        {
+            "id": "{{$e.Id}},
+            "name": "{{$e.Name}}
+        {{if eq $max $i}}
+        }
+        {{else}}
+        },
+        {{end}}
+{{end}}
+    ]
+}

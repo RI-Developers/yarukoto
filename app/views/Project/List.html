@@ -1,0 +1,17 @@
+{
+    "result": true,
+    "projects": [
+    {{$max := .Max}}
+    {{range $i, $e := .b}}
+        {
+        "_id": "{{$e.Id}}",
+        "name: "{{$e.Name}}"
+
+        {{if eq $max $i}}
+        }
+        {{else}}
+        },
+        {{ end }}
+    {{ end }}
+    ]
+}

@@ -18,6 +18,12 @@ func Collection(d *mgo.Database) *mgo.Collection {
 	return d.C(COLLECTION)
 }
 
+func FindAll(d *mgo.Database) []Book {
+    result := []Book{}
+    Collection(d).Find(nil).All(&result)
+    return result
+}
+
 func FindByObjectId(d *mgo.Database, Id bson.ObjectId) *Book {
 	b := new(Book)
 	Collection(d).FindId(Id).One(b)
@@ -31,6 +37,12 @@ func FindById(d *mgo.Database, id string) *Book {
 	}
 
 	return new(Book)
+}
+
+func FindByBookId(d *mgo.Database, id string) *Book {
+    b := new(Book)
+    Collection(d).Find(bson.M{"Id": id}).One(b)
+    return b
 }
 
 func FindByTitle(d *mgo.Database, Title string) *Book {
