@@ -147,35 +147,3 @@ func FindProjectListByTeamId(d *mgo.Database, HexTeamId string) []ProjectListRes
     return projectList
 }
 
-// get todo list (API_T001)
-func FindTodoListByTeamAndProjectId(d *mgo.Database, TeamHexId string, ProjectId string) []TodoListResponse {
-    result := []TodoListResponse{}
-//    pResult := Team{}
-//    if bson.IsObjectIdHex(TeamHexId) {
-//        Id := bson.ObjectIdHex(TeamHexId)
-//        Collection(d).FindId(Id).One(&pResult)
-//
-//        for _, Project := range pResult.Projects {
-//            if Project.Id == ProjectId {
-//                todo := TodoListResponse{}
-//
-//                for _, Todo := range Project.Todos {
-//                    todo.Id = Todo.Id.Hex()
-//                    todo.AuthorName = "テスト"
-//                    todo.Title      = Todo.Title
-//                    todo.CDate      = Todo.CDate
-//                    todo.SSDate     = Todo.SSDate
-//                    todo.SFDate     = Todo.SFDate
-//                    todo.FDate      = Todo.FDate
-//                    todo.Finished   = Todo.Finished
-//                }
-//
-//                result = append(result, todo)
-//
-//            }
-//        }
-//
-//    }
-    return result
-}
-
