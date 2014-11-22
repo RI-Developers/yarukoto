@@ -107,9 +107,6 @@ func FindTeamList(d *mgo.Database) []Team {
     result   := []TeamListResponse{}
     Collection(d).Find(nil).All(&teamList)
 
-    //pro := Project{}
-    //FindRef(d, &teamList[0].Projects[0]).One(&pro)
-
     // TeamList to TeamListResponse
     for _, each := range teamList {
         newTeamList := TeamListResponse{}
@@ -124,20 +121,30 @@ func FindTeamList(d *mgo.Database) []Team {
 
 // get project list (API_P001)
 func FindProjectListByTeamId(d *mgo.Database, HexTeamId string) []ProjectListResponse {
-    projectList := []ProjectList{}
-    result      := []ProjectListResponse{}
+    team := Team{}
+    projectList := []ProjectListResponse{}
+
+    //result      := []ProjectListResponse{}
     if bson.IsObjectIdHex(HexTeamId) {
         Id := bson.ObjectIdHex(HexTeamId)
-        Collection(d).FindId(Id).All(&projectList)
+        Collection(d).FindId(Id).One(&team)
     }
 
-    for _, each := range projectList {
-        newPList := ProjectListResponse{}
-        newPList.Id = each.Id.Hex()
-        newPList.Name = each.Name
-        result = append(result, newPList)
+    for _, projectRef := range team.Projects {
+        project := Project{}
+        FindRef(d, &projectRef).One(&project)
+
+        nProjectRef := ProjectListResponse{}
+        nProjectRef.Id = bson.ObjectId.Hex(project.Id)  // convert OID to Hex
+        nProjectRef.Name = project.Name
+
+        projectList = append(projectList, nProjectRef)
     }
-    return result
+
+    //pro := Project{}
+    //FindRef(d, &teamList[0].Projects[0]).One(&pro)
+
+    return projectList
 }
 
 // get todo list (API_T001)
