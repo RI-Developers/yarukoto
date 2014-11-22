@@ -3,7 +3,6 @@ package models
 import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-    //"fmt"
 )
 
 const COLLECTION = "teams"
@@ -19,7 +18,7 @@ type Team struct {
 type Project struct {
     Id      bson.ObjectId `bson:"_id,omitempty"`
     Name    string        `bson:"name"`
-    Users   []mgo.DBRef     `bson:"users"`
+    Users   []mgo.DBRef   `bson:"users"`
     Todos   []string      `bson:"todos"`
 }
 
@@ -85,6 +84,18 @@ type TodoListResponse struct {
     Finished    string
 }
 
+func FindRef(d *mgo.Database, ref *mgo.DBRef) *mgo.Query {
+	var c *mgo.Collection
+
+	if ref.Database == "" {
+		c = d.C(ref.Collection)
+	} else {
+		c = d.Session.DB(ref.Database).C(ref.Collection)
+	}
+
+    id := bson.ObjectIdHex(ref.Id.(string))
+    return c.FindId(id)
+}
 
 func Collection(d *mgo.Database) *mgo.Collection {
 	return d.C(COLLECTION)
@@ -97,8 +108,7 @@ func FindTeamList(d *mgo.Database) []Team {
     Collection(d).Find(nil).All(&teamList)
 
     //pro := Project{}
-    //d.FindRef(&teamList[0].Projects[0]).One(&pro)
-    //fmt.Printf("%#v", pro)
+    //FindRef(d, &teamList[0].Projects[0]).One(&pro)
 
     // TeamList to TeamListResponse
     for _, each := range teamList {
