@@ -1,8 +1,13 @@
 {
+{{if eq .succeeds true}}
     "result": true,
     "user": {
         "id": "id",
         "name": "ユーザー",
-        "access_token": "ランダム文字列"
+        "access_token": "{{.accessToken}}"
     }
+{{else}}
+    "result": false,
+    "err_msg": "ID または パスワードが間違っている…とおもう"
+{{end}}
 }
