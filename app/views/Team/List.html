@@ -1,8 +1,10 @@
 {
+{{if eq .succeeds true}}
+
     "result": true,
     "teams": [
-{{$max := .Max}}
-{{range $i, $e := .b}}
+    {{$max := .Max}}
+    {{range $i, $e := .b}}
         {
             "id": "{{$e.Id}}",
             "name": "{{$e.Name}}"
@@ -11,6 +13,13 @@
         {{else}}
         },
         {{end}}
-{{end}}
+    {{end}}
     ]
+
+{{else}}
+
+    "result": false,
+    "err_msg": "なにかエラーが発生したようです。アクセストークンが不正とか…"
+
+{{end}}
 }
