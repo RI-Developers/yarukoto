@@ -13,10 +13,15 @@ type Project struct {
 
 func (c Project) List() revel.Result {
     c.Response.ContentType = "application/json; charset=utf8"
-    b := models.FindProjectListByTeamId(c.Database, "54577d4ce4b0c733f78cb7a7")
 
-    Max := len(b) - 1
-	return c.Render(b, Max)
+    if c.Request.Method == "POST" {
+        //b := models.FindProjectListByTeamId(c.Database, "54577d4ce4b0c733f78cb7a7")
+        b := models.FindProjectListByTeamId(c.Database, c.Request.PostForm.Get("team_id"))
+        Max := len(b) - 1
+        return c.Render(b, Max)
+    }
+ 
+	return c.Render()
     //return c.RenderJson(b)
 }
 
