@@ -13,6 +13,21 @@ type User struct {
 
 func (c User) Login() revel.Result {
     c.Response.ContentType = "application/json; charset=utf8"
-	return c.Render()
+
+    succeeds := false
+
+    id  := c.Request.PostForm.Get("id")
+    pwd := c.Request.PostForm.Get("pwd")
+
+
+    // authentication process here
+    if id == "user" && pwd == "password" {
+        succeeds = true
+        accessToken := "this_is_access_token_sample"
+        c.Render(succeeds, accessToken)
+    }
+
+
+	return c.Render(succeeds)
 }
 

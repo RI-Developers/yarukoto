@@ -17,6 +17,7 @@ GET     /book/view/:id                          Book.View
 
 # Yarukoto
 GET    /login                                  User.Login
+POST   /login                                  User.Login
 
 # Catch all
 *       /:controller/:action                    :controller.:action
