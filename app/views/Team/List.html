@@ -4,8 +4,8 @@
 {{$max := .Max}}
 {{range $i, $e := .b}}
         {
-            "id": "{{$e.Id}},
-            "name": "{{$e.Name}}
+            "id": "{{$e.Id}}",
+            "name": "{{$e.Name}}"
         {{if eq $max $i}}
         }
         {{else}}
