@@ -15,8 +15,19 @@ type Team struct {
 func (c Team) List() revel.Result {
     c.Response.ContentType = "application/json; charset=utf8"
 
-    b := models.FindTeamList(c.Database)
-    Max := len(b) - 1
-    return c.Render(b, Max)
+    succeeds := false
+
+    if c.Request.Method == "POST" {
+
+        // Validation check here
+        accessToken := "this_is_access_token_sample"
+        if c.Request.PostForm.Get("access_token") == accessToken {
+            b := models.FindTeamList(c.Database)
+            Max := len(b) - 1
+            return c.Render(succeeds, b, Max)
+        }
+
+    }
+    return c.Render(succeeds)
 }
 
