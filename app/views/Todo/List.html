@@ -1,4 +1,5 @@
 {
+{{if eq .succeeds true}}
     "result": true,
     "todos": [
     {{$max := .Max}}
@@ -19,4 +20,10 @@
         {{end}}
     {{end}}
     ]
+{{else}}
+
+    "result": false,
+    "err_msg": "なにかエラーが発生したようです。アクセストークンが不正とか…"
+
+{{end}}
 }
