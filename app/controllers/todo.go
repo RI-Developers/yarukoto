@@ -15,7 +15,6 @@ func (c Todo) List() revel.Result {
     c.Response.ContentType = "application/json; charset=utf8"
 
     if c.Request.Method == "POST" {
-        //b := models.FindTodoListByProjectId(c.Database, "5467157be4b0c9468004aef6")
         b := models.FindTodoListByProjectId(c.Database, c.Request.PostForm.Get("project_id"))
         Max := len(b) - 1
         return c.Render(b, Max)
